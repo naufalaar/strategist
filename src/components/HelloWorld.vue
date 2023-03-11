@@ -1,58 +1,80 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <b-container>
+    <b-form class="mt-4">
+      <b-row>
+        <b-col cols="4">
+          <b-form-input
+            id="inline-form-input-name"
+            class="mb-2 mr-sm-2 mb-sm-0"
+            placeholder="Team IDs"
+            v-model="teamIds"
+          ></b-form-input>
+        </b-col>
+        <b-col cols="4">
+          <b-button variant="primary" @click="getTeams">Get Details</b-button>
+        </b-col>
+      </b-row>
+    </b-form>
+
+    <b-table striped hover :items="wageTable"></b-table>
+  </b-container>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+  name: "HelloWorld",
+  computed: {
+    wageTable() {
+      var wageTable = [];
+      var headers = this.wages[0].split(",");
+      for (var i = 1; i < this.wages.length; i++) {
+        var data = this.wages[i].split(",");
+        var obj = {};
+        for (var j = 0; j < data.length; j++) {
+          obj[headers[j].trim()] = data[j].trim();
+        }
+        wageTable.push(obj);
+      }
+      return wageTable;
+    },
+  },
+  data() {
+    return {
+      teamIds: "0",
+      wages: [
+        "TeamID, TeamName, Average, Median, NumberOfPlayers",
+        "1903,Cubicle Dwellers,491.91,594,11",
+      ],
+      host: "https://battrickstats-d4otn6fbfa-uc.a.run.app/averageWages",
+    };
+  },
+  methods: {
+    async getTeams() {
+      console.log(this.teamIds);
+      const headers = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const requestBody = {
+        U1000: true,
+        teamIDs: this.teamIds.split(',').map(Number),
+      };
+      console.log(requestBody);
+      await axios
+        .post(this.host, requestBody, headers)
+        .then((response) => {
+          console.log(response.data.wages);
+          this.wages = response.data.wages;
+        })
+        .catch(console.log("Error"));
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>
