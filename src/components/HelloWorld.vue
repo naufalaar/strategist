@@ -45,7 +45,7 @@ export default {
       teamIds: "0",
       wages: [
         "TeamID, TeamName, Average, Median, NumberOfPlayers",
-        "1903,Cubicle Dwellers,491.91,594,11",
+        "Dummy,Dummy,Dummy,Dummy,Dummy",
       ],
       host: "https://battrickstats-d4otn6fbfa-uc.a.run.app/averageWages",
     };
