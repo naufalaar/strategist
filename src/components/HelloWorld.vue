@@ -11,14 +11,23 @@
         ></b-form-input>
       </b-col>
       <b-col cols="4">
-        <b-form-checkbox v-model="under" class="mb-2 mr-sm-2 mb-sm-0">U1000</b-form-checkbox>
+        <b-form-checkbox v-model="under" class="mb-2 mr-sm-2 mb-sm-0"
+          >U1000</b-form-checkbox
+        >
       </b-col>
       <b-col cols="4">
         <b-button variant="primary" @click="getTeams">Get Details</b-button>
       </b-col>
     </b-row>
 
-    <b-table striped hover :items="wageTable"></b-table>
+    <b-table
+      striped
+      hover
+      :items="wageTable"
+      :fields="wageFields"
+      :sort-by.sync="sortWagesBy"
+      :sort-desc.sync="sortWagesDesc"
+    ></b-table>
     <h2 class="mt-4">Match Stats</h2>
     <b-row>
       <b-col cols="4">
@@ -34,11 +43,32 @@
       </b-col>
     </b-row>
     <h3 class="mt-4">Batting</h3>
-    <b-table striped hover :items="matchTable.batting"></b-table>
+    <b-table
+      striped
+      hover
+      :items="matchTable.batting"
+      :fields="battingFields"
+      :sort-by.sync="sortBattingBy"
+      :sort-desc.sync="sortBattingDesc"
+    ></b-table>
     <h3 class="mt-4">Bowling</h3>
-    <b-table striped hover :items="matchTable.bowing"></b-table>
+    <b-table
+      striped
+      hover
+      :items="matchTable.bowing"
+      :fields="bowlingFields"
+      :sort-by.sync="sortBowlingBy"
+      :sort-desc.sync="sortBowlingDesc"
+    ></b-table>
     <h3 class="mt-4">Team</h3>
-    <b-table striped hover :items="matchTable.team"></b-table>
+    <b-table
+      striped
+      hover
+      :items="matchTable.team"
+      :fields="teamFields"
+      :sort-by.sync="sortTeamsBy"
+      :sort-desc.sync="sortTeamsDesc"
+    ></b-table>
   </b-container>
 </template>
 
@@ -48,6 +78,18 @@ import axios from "axios";
 export default {
   name: "HelloWorld",
   computed: {
+    wageFields(){
+      return this.wages[0].split(",").map((str) =>({key: str.trim(), sortable: true}))
+    },
+    battingFields(){
+      return this.stats["batting"][0].split(",").map((str) =>({key: str.trim(), sortable: true}))
+    },
+    bowlingFields(){
+      return this.stats["bowing"][0].split(",").map((str) =>({key: str.trim(), sortable: true}))
+    },
+    teamFields(){
+      return this.stats["team"][0].split(",").map((str) =>({key: str.trim(), sortable: true}))
+    },
     wageTable() {
       var wageTable = [];
       var headers = this.wages[0].split(",");
@@ -106,6 +148,14 @@ export default {
       teamIds: "0",
       under: false,
       matchIds: "0",
+      sortWagesBy: "Average",
+      sortWagesDesc: false,
+      sortBattingBy: "",
+      sortBattingDesc: false,
+      sortBowlingBy: "",
+      sortBowlingDesc: false,
+      sortTeamsBy: "",
+      sortTeamsDesc: false,
       wages: [
         "TeamID, TeamName, Average, Median, NumberOfPlayers",
         "Dummy,Dummy,Dummy,Dummy,Dummy",
