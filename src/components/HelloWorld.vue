@@ -27,6 +27,9 @@
       :fields="wageFields"
       :sort-by.sync="sortWagesBy"
       :sort-desc.sync="sortWagesDesc"
+      label-sort-asc=""
+      label-sort-desc=""
+      label-sort-clear=""
     ></b-table>
     <h2 class="mt-4">Match Stats</h2>
     <b-row>
@@ -50,6 +53,9 @@
       :fields="battingFields"
       :sort-by.sync="sortBattingBy"
       :sort-desc.sync="sortBattingDesc"
+      label-sort-asc=""
+      label-sort-desc=""
+      label-sort-clear=""
     ></b-table>
     <h3 class="mt-4">Bowling</h3>
     <b-table
@@ -59,6 +65,9 @@
       :fields="bowlingFields"
       :sort-by.sync="sortBowlingBy"
       :sort-desc.sync="sortBowlingDesc"
+      label-sort-asc=""
+      label-sort-desc=""
+      label-sort-clear=""
     ></b-table>
     <h3 class="mt-4">Team</h3>
     <b-table
@@ -68,6 +77,9 @@
       :fields="teamFields"
       :sort-by.sync="sortTeamsBy"
       :sort-desc.sync="sortTeamsDesc"
+      label-sort-asc=""
+      label-sort-desc=""
+      label-sort-clear=""
     ></b-table>
   </b-container>
 </template>
@@ -78,17 +90,25 @@ import axios from "axios";
 export default {
   name: "HelloWorld",
   computed: {
-    wageFields(){
-      return this.wages[0].split(",").map((str) =>({key: str.trim(), sortable: true}))
+    wageFields() {
+      return this.wages[0]
+        .split(",")
+        .map((str) => ({ key: str.trim(), sortable: true }));
     },
-    battingFields(){
-      return this.stats["batting"][0].split(",").map((str) =>({key: str.trim(), sortable: true}))
+    battingFields() {
+      return this.stats["batting"][0]
+        .split(",")
+        .map((str) => ({ key: str.trim(), sortable: true }));
     },
-    bowlingFields(){
-      return this.stats["bowing"][0].split(",").map((str) =>({key: str.trim(), sortable: true}))
+    bowlingFields() {
+      return this.stats["bowing"][0]
+        .split(",")
+        .map((str) => ({ key: str.trim(), sortable: true }));
     },
-    teamFields(){
-      return this.stats["team"][0].split(",").map((str) =>({key: str.trim(), sortable: true}))
+    teamFields() {
+      return this.stats["team"][0]
+        .split(",")
+        .map((str) => ({ key: str.trim(), sortable: true }));
     },
     wageTable() {
       var wageTable = [];
